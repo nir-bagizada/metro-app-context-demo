@@ -23,7 +23,10 @@ import componentUrl from './counter-widget.tsx?url';
  */
 export default extensions.editorReactComponent({
   id: '4bea6986-63b0-4bc1-b872-4b3d838fe3a1',
-  type: 'CounterWidget',
+  // Format: `<app code identifier>.<ComponentName>` (from wix.config.json
+  // codeIdentifier). The release enrichment SPI rejects a bare type with
+  // "Component type does not begin with code identifier".
+  type: 'Guyo91Metropit0d6.CounterWidget',
   displayName: 'Echo Counter Widget',
   description: 'Echo counter viewer-context demo widget.',
   editorElement: {
