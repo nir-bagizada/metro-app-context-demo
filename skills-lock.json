@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "skills": {
+    "wix-app": {
+      "source": "/Users/nirba/projects/metro-app-context-demo/node_modules/@wix/agent-skills",
+      "sourceType": "local",
+      "computedHash": "85aee1330ea28a717d06a65ab643224728a0f059affb46fbc28766337df09932"
+    },
+    "wix-auth": {
+      "source": "/Users/nirba/projects/metro-app-context-demo/node_modules/@wix/agent-skills",
+      "sourceType": "local",
+      "computedHash": "bf7376e4c8c35712962a1a5b621adbcf8b7dc8bdbc0a1870e47992e317b6d213"
+    },
+    "wix-design-system": {
+      "source": "/Users/nirba/projects/metro-app-context-demo/node_modules/@wix/agent-skills",
+      "sourceType": "local",
+      "computedHash": "180241cb6db94aea72a8290bb1724061e580c83042ae63e4703729875ecf3be5"
+    },
+    "wix-docs": {
+      "source": "/Users/nirba/projects/metro-app-context-demo/node_modules/@wix/agent-skills",
+      "sourceType": "local",
+      "computedHash": "75b8bd949ddfd512562198749b0d4f9c9b167124c20ff7a9c265b02b548b7b5a"
+    },
+    "wix-headless": {
+      "source": "/Users/nirba/projects/metro-app-context-demo/node_modules/@wix/agent-skills",
+      "sourceType": "local",
+      "computedHash": "c9a25ddb34f41ffa7a412de61241989be481d9bffa3f765dc2450a1e57b12222"
+    },
+    "wix-manage": {
+      "source": "/Users/nirba/projects/metro-app-context-demo/node_modules/@wix/agent-skills",
+      "sourceType": "local",
+      "computedHash": "a33ceeb1178fbb263791927e1a2b0b19ddb4f0e454519700caaf00e426e5eca9"
+    },
+    "wix-vibe-headless": {
+      "source": "/Users/nirba/projects/metro-app-context-demo/node_modules/@wix/agent-skills",
+      "sourceType": "local",
+      "computedHash": "0eaf278abc2c16ba8edc1521c885c44286de5168db585b5799b9854fcb4da3cb"
+    }
+  }
+}
