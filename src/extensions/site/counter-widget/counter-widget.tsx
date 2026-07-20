@@ -1,7 +1,8 @@
 import type { FC, ReactNode } from 'react';
 import { Component, useEffect } from 'react';
 import { useService } from '@wix/services-manager-react';
-import { CounterServiceDefinition, useCounter } from '@wix/echo-counter';
+import { useCounter } from '@wix/echo';
+import { CounterServiceDefinition } from '@wix/echo-counter';
 
 type CounterWidgetProps = {
   id?: string;
