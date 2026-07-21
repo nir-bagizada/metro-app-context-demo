@@ -1,21 +1,19 @@
 import type { FC, ReactNode } from 'react';
 import { Component } from 'react';
-// The hook + its type come via the typed re-export shim
-// `@wix/echo-counter/context` (wayfinder T22/T23): its runtime is a bare
-// re-export of the provider's `contextSpecifier.moduleSpecifier`
-// (`echo-counter-context`), NOT hook code — a bundled hook copy would be a
-// second React-context instance that never sees the provider's value.
-// `contextDependencies` (see the .extension.ts) makes @wix/astro keep that
-// specifier external even though it now sits one node_modules hop away
-// (T23's transitive-externalization check); Thunderbolt's import map resolves
-// it to the provider's client bundle at runtime. The shim also ships
-// `CounterContextType`, replacing the previous `@ts-expect-error` untyped
-// import + hand-redeclared type. Once metro regenerates `@wix/echo` with the
-// new SDK exports, this import swaps to `from '@wix/echo'` (T22 §2).
-import {
-  type CounterContextType,
-  useCounterContext,
-} from '@wix/echo-counter/context';
+// The hook + its type come from the PUBLIC SDK surface `@wix/echo` (wayfinder
+// T22/T23, Stage-2 import parity): metro-generated re-exports of the typed
+// shim `@wix/echo-counter/context`, whose runtime is a bare re-export of the
+// provider's `contextSpecifier.moduleSpecifier` (`echo-counter-context`) —
+// NOT hook code; a bundled hook copy would be a second React-context instance
+// that never sees the provider's value. `contextDependencies` (see the
+// .extension.ts) keeps that specifier external through BOTH node_modules hops
+// (@wix/echo → @wix/echo-counter/context → echo-counter-context); Thunderbolt's
+// import map resolves it to the provider's client bundle at runtime.
+// `CounterContextType` must be a type-only import: the generated SDK's JS
+// carries it as a broken runtime binding (tsup emits type re-exports as value
+// re-exports — a T23 finding for T25/T26), so only elided type imports are safe.
+import { useCounterContext } from '@wix/echo';
+import type { CounterContextType } from '@wix/echo';
 
 type ContextCounterWidgetProps = {
   id?: string;

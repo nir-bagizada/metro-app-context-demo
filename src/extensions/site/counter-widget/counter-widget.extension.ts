@@ -56,6 +56,13 @@ export default extensions.editorReactComponent({
       componentUrl,
       dependencies: {
         serviceDependencies: ['@wix/echo-counter'],
+        // NOT a context consumer — declared only because @wix/echo's ROOT now
+        // re-exports the context shim, so every bundle that inlines @wix/echo
+        // must externalize the runtime-only 'echo-counter-context' specifier
+        // or fail to build (wayfinder T23 finding #3: root-level placement
+        // couples ALL SDK consumers to the context external; a
+        // relativeSpecifier subpath would have isolated it).
+        contextDependencies: ['echo-counter-context'],
       },
     },
   },
