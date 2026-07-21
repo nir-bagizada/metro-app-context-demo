@@ -30,7 +30,7 @@ export default extensions.genericExtension({
     sdkExports: {
       importMetadata: {
         packageName: '@wix/echo-counter',
-        packageVersion: '^1.0.2',
+        packageVersion: '^1.0.3',
         specifier: 'context',
         importedName: 'useCounterContext',
       },
