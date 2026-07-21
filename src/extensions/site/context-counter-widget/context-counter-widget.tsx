@@ -1,24 +1,21 @@
 import type { FC, ReactNode } from 'react';
 import { Component } from 'react';
-// The hook + its type come from the provider's `contextSpecifier.moduleSpecifier`
-// (`echo-counter-context`), NOT a relative import of the provider .tsx — a
-// relative import would bundle a second React-context instance and never see the
-// provider's value. `contextDependencies` (see the .extension.ts) makes @wix/astro
-// treat this specifier as an external; Thunderbolt's import map resolves it to the
-// provider's client bundle at runtime.
-//
-// `@ts-expect-error`: the module is generated at build/runtime, so it has no
-// static types — a T21 authoring-experience finding (no manifest→d.ts codegen,
-// wayfinder T20). We re-assert the shape via `CounterContextType` below.
-// @ts-expect-error runtime-generated module, no static types
-import { useCounterContext } from 'echo-counter-context';
-
-type CounterContextType = {
-  count: number;
-  decrement: () => void;
-  increment: () => void;
-  setCount: (count: number) => void;
-};
+// The hook + its type come via the typed re-export shim
+// `@wix/echo-counter/context` (wayfinder T22/T23): its runtime is a bare
+// re-export of the provider's `contextSpecifier.moduleSpecifier`
+// (`echo-counter-context`), NOT hook code — a bundled hook copy would be a
+// second React-context instance that never sees the provider's value.
+// `contextDependencies` (see the .extension.ts) makes @wix/astro keep that
+// specifier external even though it now sits one node_modules hop away
+// (T23's transitive-externalization check); Thunderbolt's import map resolves
+// it to the provider's client bundle at runtime. The shim also ships
+// `CounterContextType`, replacing the previous `@ts-expect-error` untyped
+// import + hand-redeclared type. Once metro regenerates `@wix/echo` with the
+// new SDK exports, this import swaps to `from '@wix/echo'` (T22 §2).
+import {
+  type CounterContextType,
+  useCounterContext,
+} from '@wix/echo-counter/context';
 
 type ContextCounterWidgetProps = {
   id?: string;

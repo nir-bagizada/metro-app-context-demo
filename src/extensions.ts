@@ -5,6 +5,8 @@ import counterWidget from './extensions/site/counter-widget/counter-widget.exten
 import counterContextProvider from './extensions/context-provider/counter/counter.extension.ts';
 import counterContextInstall from './extensions/context-provider/counter/counter.install.extension.ts';
 import contextCounterWidget from './extensions/site/context-counter-widget/context-counter-widget.extension.ts';
+import useCounterContextExport from './extensions/sdk-exports/use-counter-context.extension.ts';
+import counterContextTypeExport from './extensions/sdk-exports/counter-context-type.extension.ts';
 
 export default app()
   .use(myPage)
@@ -12,4 +14,6 @@ export default app()
   .use(counterWidget)
   .use(counterContextProvider)
   .use(counterContextInstall)
-  .use(contextCounterWidget);
+  .use(contextCounterWidget)
+  .use(useCounterContextExport)
+  .use(counterContextTypeExport);
