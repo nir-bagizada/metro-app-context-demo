@@ -1,6 +1,4 @@
-import { useSignal } from '@preact/signals-react';
-import type { Signal } from '@preact/signals-react';
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 /**
  * EDITOR_CONTEXT_PROVIDER counter — the context-provider twin of the
@@ -8,18 +6,22 @@ import React, { createContext, useContext } from 'react';
  * scaffold at `@wix/cli/templates/astro/context-provider` because `wix generate`
  * has NO CONTEXT_PROVIDER type (wayfinder T21) — the template must be copied in.
  *
- * State (`count`) is a `@preact/signals-react` signal so consumers re-render on
- * change. `@preact/signals-react` is bundled INTO this provider (it is not in
- * @wix/astro's externals list — only react/react-dom/jsx + services-manager-react
- * are shared with the host); react is shared, so the signal's React binding works
- * against the host's React instance.
+ * State is plain React `useState`, NOT the `@preact/signals-react` signal the CLI
+ * scaffold template ships (wayfinder T21 finding #8). The provider and its
+ * consumer widget are SEPARATELY bundled extensions, so each would carry its own
+ * `signals-core` instance; a signal created here can't drive a re-render in the
+ * consumer's bundle — the value reads correctly but mutations never notify it, so
+ * the counter renders yet its buttons look dead. React Context propagation works
+ * across bundles because React itself is a shared external: when `count` changes,
+ * the context value changes identity and every consumer re-renders. This also
+ * matches the manifest, which declares `count` as `dataType: 'number'`.
  *
  * The hook name below (`useCounterContext`) must match the extension's
  * `resources.contextSpecifier.hook` — that is the export Thunderbolt re-exports
  * from the provider's runtime module for consumers.
  */
 export interface CounterContextType {
-  count: Signal<number>;
+  count: number;
   decrement: () => void;
   increment: () => void;
   setCount: (count: number) => void;
@@ -48,19 +50,10 @@ function CounterContextProvider({
   children,
   initialCount,
 }: CounterProviderProps): React.ReactNode {
-  const count = useSignal(initialCount || 0);
+  const [count, setCount] = useState(initialCount || 0);
 
-  const increment = () => {
-    count.value += 1;
-  };
-
-  const decrement = () => {
-    count.value -= 1;
-  };
-
-  const setCount = (value: number) => {
-    count.value = value;
-  };
+  const increment = useCallback(() => setCount((c) => c + 1), []);
+  const decrement = useCallback(() => setCount((c) => c - 1), []);
 
   const api: CounterContextType = {
     count,

@@ -12,10 +12,9 @@ import { Component } from 'react';
 // wayfinder T20). We re-assert the shape via `CounterContextType` below.
 // @ts-expect-error runtime-generated module, no static types
 import { useCounterContext } from 'echo-counter-context';
-import type { Signal } from '@preact/signals-react';
 
 type CounterContextType = {
-  count: Signal<number>;
+  count: number;
   decrement: () => void;
   increment: () => void;
   setCount: (count: number) => void;
@@ -85,7 +84,7 @@ const ContextCounterInner: FC<ContextCounterWidgetProps> = ({
     >
       <span>
         Context count:{' '}
-        <strong data-hook="echo-context-counter-count">{count.value}</strong>
+        <strong data-hook="echo-context-counter-count">{count}</strong>
       </span>
       <button type="button" onClick={increment}>
         Increment
