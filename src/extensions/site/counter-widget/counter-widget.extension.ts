@@ -16,10 +16,11 @@ import componentUrl from './counter-widget.tsx?url';
  * registers this extension in a released app version — `wix build`/`wix preview`
  * alone won't expose it.
  *
- * `resources.client.dependencies.serviceDependencies: ['@wix/echo-counter']` is
- * the critical line: on a live page Thunderbolt only loads a ViewerService when
- * an on-page component declares it here (editor preview loads services ungated —
- * never verify there; wayfinder T11).
+ * RETIRED the ViewerService leg (wayfinder T24): `serviceDependencies:
+ * ['@wix/echo-counter']` is gone along with the ViewerService extension it
+ * gated, and `contextDependencies` — previously carried only to satisfy
+ * @wix/echo's root-level context re-export (T23 finding #3) — is now what this
+ * widget actually needs, since its .tsx consumes the context hook.
  */
 export default extensions.editorReactComponent({
   id: '4bea6986-63b0-4bc1-b872-4b3d838fe3a1',
@@ -55,13 +56,9 @@ export default extensions.editorReactComponent({
     client: {
       componentUrl,
       dependencies: {
-        serviceDependencies: ['@wix/echo-counter'],
-        // NOT a context consumer — declared only because @wix/echo's ROOT now
-        // re-exports the context shim, so every bundle that inlines @wix/echo
-        // must externalize the runtime-only 'echo-counter-context' specifier
-        // or fail to build (wayfinder T23 finding #3: root-level placement
-        // couples ALL SDK consumers to the context external; a
-        // relativeSpecifier subpath would have isolated it).
+        // Must match the provider's `contextSpecifier.moduleSpecifier`: it keeps
+        // the specifier external so the hook stays a runtime import, and tells
+        // Thunderbolt to wrap this component's subtree with the counter provider.
         contextDependencies: ['echo-counter-context'],
       },
     },

@@ -1,8 +1,16 @@
 import type { FC, ReactNode } from 'react';
-import { Component, useEffect } from 'react';
-import { useService } from '@wix/services-manager-react';
-import { useCounter } from '@wix/echo';
-import { CounterServiceDefinition } from '@wix/echo-counter';
+import { Component } from 'react';
+// MIGRATED off the ViewerService leg (wayfinder T24). This widget used to read
+// the counter through `useCounter()` + `useService(CounterServiceDefinition)`,
+// both backed by the `@wix/echo-counter` ViewerService extension. That extension
+// is gone, so the only live counter path is the EDITOR_CONTEXT_PROVIDER one, and
+// this widget now consumes it exactly like ../context-counter-widget does.
+//
+// `CounterContextType` must stay a type-only import: the generated SDK ships it
+// as a broken runtime binding (tsup emits type re-exports as value re-exports —
+// wayfinder T23 finding #2), so only elided type imports are safe.
+import { useCounterContext } from '@wix/echo';
+import type { CounterContextType } from '@wix/echo';
 
 type CounterWidgetProps = {
   id?: string;
@@ -20,14 +28,15 @@ const shellStyle = {
 } as const;
 
 /**
- * Error boundary so a missing ServicesManager context NEVER crashes the host.
+ * Error boundary so a missing context provider NEVER crashes the host.
  *
- * The counter ViewerService is provided by Thunderbolt on a LIVE page (gated by
- * this component's `serviceDependencies`). In environments where that provider
- * isn't set up — notably the Harmony editor canvas during bootstrap —
- * `useService` throws synchronously in render. Without this boundary that
- * exception propagates up and blanks the whole editor (the "site won't load"
- * symptom). Here we catch it and render a neutral placeholder instead.
+ * `useCounterContext()` throws synchronously in render when no provider is above
+ * it. Off a live page that is always the case; on a live page it also happens
+ * when this widget sits OUTSIDE the container the counter context is attached to
+ * (attachment is a per-container document-model edit, not an app-wide switch —
+ * wayfinder T21 step 3 / T27). The sibling ../context-counter-widget is the
+ * known-good control: if that one renders and this one shows the placeholder,
+ * the attach scope doesn't cover this widget's container.
  */
 class CounterBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
@@ -44,25 +53,9 @@ class CounterBoundary extends Component<
   }
 }
 
-/**
- * Inner widget — the part that actually consumes the counter viewer context.
- *
- * - `useCounter()` drives the reactive display (transform-independent).
- * - `useService(CounterServiceDefinition)` grabs the raw service instance and
- *   exposes it on `window.__echoCounter` — a manual-testing affordance for
- *   console pokes, NOT public API. It is the same instance the UI renders,
- *   which is what proves a single shared counter.
- *
- * Either hook throws if the ServicesManager provider is absent; that's expected
- * off a live page and is handled by <CounterBoundary> above.
- */
 const CounterInner: FC<CounterWidgetProps> = ({ id, className }) => {
-  const service = useService(CounterServiceDefinition);
-  const { count, increment, reset } = useCounter();
-
-  useEffect(() => {
-    (window as unknown as { __echoCounter?: unknown }).__echoCounter = service;
-  }, [service]);
+  const { count, increment, setCount } =
+    useCounterContext() as CounterContextType;
 
   return (
     <div
@@ -76,7 +69,7 @@ const CounterInner: FC<CounterWidgetProps> = ({ id, className }) => {
       <button type="button" onClick={increment}>
         Increment
       </button>
-      <button type="button" onClick={reset}>
+      <button type="button" onClick={() => setCount(0)}>
         Reset
       </button>
     </div>
@@ -84,13 +77,12 @@ const CounterInner: FC<CounterWidgetProps> = ({ id, className }) => {
 };
 
 /**
- * Harness widget for the echo counter viewer context.
+ * Harness widget for the echo counter, now on the context-provider path.
  *
- * On a live Wix page, declaring `@wix/echo-counter` in the extension's
- * `serviceDependencies` makes Thunderbolt load the ViewerService and mount the
- * ServicesManager context, so the inner hooks resolve and render the counter.
- * Anywhere the context is missing, the boundary shows a placeholder so the host
- * (e.g. the Harmony editor) still loads.
+ * Kept declared (same immutable compId) rather than deleted so the already-placed
+ * instance on the live harness page keeps resolving to a real component — this is
+ * the migration shape a team with a released ViewerService would follow: repoint
+ * the consumer, drop the service, keep the component identity.
  *
  * React 17-compatible APIs only (site components don't support React 18 features).
  */
