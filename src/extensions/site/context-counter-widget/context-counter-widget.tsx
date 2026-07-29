@@ -12,8 +12,15 @@ import { Component } from 'react';
 // `CounterContextType` must be a type-only import: the generated SDK's JS
 // carries it as a broken runtime binding (tsup emits type re-exports as value
 // re-exports — a T23 finding for T25/T26), so only elided type imports are safe.
-import { useCounterContext } from '@wix/echo/context';
-import type { CounterContextType } from '@wix/echo/context';
+// NOTE: still the root, not `@wix/echo/context`, and this is an ordering
+// constraint rather than an oversight. The SDK_EXPORTS in this same project now
+// declare `relativeSpecifier: 'context'`, but that subpath only comes into
+// existence once THIS release regenerates the SDK and the new `@wix/echo`
+// publishes. Importing it early is a hard build failure, not just a type error:
+// `Missing "./context" specifier in "@wix/echo" package` from the bundler. Flip
+// these two lines (and bump `@wix/echo`) in a follow-up release.
+import { useCounterContext } from '@wix/echo';
+import type { CounterContextType } from '@wix/echo';
 
 type ContextCounterWidgetProps = {
   id?: string;
