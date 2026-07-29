@@ -12,8 +12,8 @@ import { Component } from 'react';
 // `CounterContextType` must be a type-only import: the generated SDK's JS
 // carries it as a broken runtime binding (tsup emits type re-exports as value
 // re-exports — a T23 finding for T25/T26), so only elided type imports are safe.
-import { useCounterContext } from '@wix/echo';
-import type { CounterContextType } from '@wix/echo';
+import { useCounterContext } from '@wix/echo/context';
+import type { CounterContextType } from '@wix/echo/context';
 
 type ContextCounterWidgetProps = {
   id?: string;

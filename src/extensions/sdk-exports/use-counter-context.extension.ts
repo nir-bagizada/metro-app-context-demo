@@ -2,10 +2,17 @@ import { extensions } from '@wix/astro/builders/trusted';
 
 /**
  * SDK_EXPORTS component for the context-provider hook (wayfinder T22/T23):
- * makes metro's generated `@wix/echo` re-export `useCounterContext` at its
- * root, importing it from the typed shim `@wix/echo-counter/context`
- * (`importMetadata.specifier` = source subpath; no
- * `exportMetadata.relativeSpecifier` → lands in the `@wix/echo` root index).
+ * makes metro's generated `@wix/echo` re-export `useCounterContext` from its
+ * `./context` entry point, importing it from the typed shim
+ * `@wix/echo-counter/context`. The two `specifier` fields are different axes:
+ * `importMetadata.specifier` is the SOURCE subpath inside the
+ * `@wix/echo-counter` shim, while `exportMetadata.relativeSpecifier` is the
+ * DESTINATION entry point on the generated `@wix/echo` SDK. Both are now
+ * literally the string `context`, but that is a COINCIDENCE, not a linkage —
+ * neither value is derived from the other, and either can be changed alone.
+ * `relativeSpecifier` also routes the docs into a separate
+ * `sdk-exports-docs_echo_context` package/resource, so changing it
+ * invalidates any existing docs menu connection (T29).
  *
  * Authored MANIFEST-FIRST via the `genericExtension` escape hatch — there is
  * no first-class SDK builder (T13). This deliberately doubles as a live probe
@@ -30,12 +37,13 @@ export default extensions.genericExtension({
     sdkExports: {
       importMetadata: {
         packageName: '@wix/echo-counter',
-        packageVersion: '^1.0.3',
+        packageVersion: '^1.0.5',
         specifier: 'context',
         importedName: 'useCounterContext',
       },
       exportMetadata: {
         exportedName: 'useCounterContext',
+        relativeSpecifier: 'context',
       },
       exposureAndMaturity: {
         exposure: 'PUBLIC',

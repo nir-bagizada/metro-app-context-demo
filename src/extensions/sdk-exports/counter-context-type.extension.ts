@@ -2,8 +2,17 @@ import { extensions } from '@wix/astro/builders/trusted';
 
 /**
  * SDK_EXPORTS component for the hook's TYPE (wayfinder T22/T23): re-exports
- * `CounterContextType` from `@wix/echo-counter/context` at the `@wix/echo`
- * root, next to `useCounterContext` (one SDK_EXPORTS per symbol, T3).
+ * `CounterContextType` from `@wix/echo-counter/context` on `@wix/echo`'s
+ * `./context` entry point, next to `useCounterContext` — the two must
+ * share the same `exportMetadata.relativeSpecifier` or they land in different
+ * generated files and different docs resources
+ * (`sdk-exports-docs_echo_context`; one SDK_EXPORTS per symbol, T3).
+ *
+ * Note the two `specifier` fields below are different axes:
+ * `importMetadata.specifier` is the SOURCE subpath inside the
+ * `@wix/echo-counter` shim; `exportMetadata.relativeSpecifier` is the
+ * DESTINATION entry point on the generated `@wix/echo` SDK. Both read
+ * `context` here purely by COINCIDENCE — there is no linkage between them.
  *
  * `CounterContextType` is type-only — it has no runtime binding in the shim,
  * so the generated re-export must be elided from `@wix/echo`'s JS emit by its
@@ -22,12 +31,13 @@ export default extensions.genericExtension({
     sdkExports: {
       importMetadata: {
         packageName: '@wix/echo-counter',
-        packageVersion: '^1.0.3',
+        packageVersion: '^1.0.5',
         specifier: 'context',
         importedName: 'CounterContextType',
       },
       exportMetadata: {
         exportedName: 'CounterContextType',
+        relativeSpecifier: 'context',
       },
       exposureAndMaturity: {
         exposure: 'PUBLIC',
