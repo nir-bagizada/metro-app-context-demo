@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { Component } from 'react';
-// The hook + its type come from the PUBLIC SDK surface `@wix/echo` (wayfinder
+// The hook comes from the PUBLIC SDK surface `@wix/echo` (wayfinder
 // T22/T23, Stage-2 import parity): metro-generated re-exports of the typed
 // shim `@wix/echo-counter/context`, whose runtime is a bare re-export of the
 // provider's `contextSpecifier.moduleSpecifier` (`echo-counter-context`) —
@@ -9,18 +9,14 @@ import { Component } from 'react';
 // .extension.ts) keeps that specifier external through BOTH node_modules hops
 // (@wix/echo → @wix/echo-counter/context → echo-counter-context); Thunderbolt's
 // import map resolves it to the provider's client bundle at runtime.
-// `CounterContextType` must be a type-only import: the generated SDK's JS
-// carries it as a broken runtime binding (tsup emits type re-exports as value
-// re-exports — a T23 finding for T25/T26), so only elided type imports are safe.
 // NOTE: still the root, not `@wix/echo/context`, and this is an ordering
 // constraint rather than an oversight. The SDK_EXPORTS in this same project now
 // declare `relativeSpecifier: 'context'`, but that subpath only comes into
 // existence once THIS release regenerates the SDK and the new `@wix/echo`
 // publishes. Importing it early is a hard build failure, not just a type error:
 // `Missing "./context" specifier in "@wix/echo" package` from the bundler. Flip
-// these two lines (and bump `@wix/echo`) in a follow-up release.
+// this import (and bump `@wix/echo`) in a follow-up release.
 import { useCounterContext } from '@wix/echo';
-import type { CounterContextType } from '@wix/echo';
 
 type ContextCounterWidgetProps = {
   id?: string;
@@ -73,8 +69,7 @@ const ContextCounterInner: FC<ContextCounterWidgetProps> = ({
   id,
   className,
 }) => {
-  const { count, increment, decrement, setCount } =
-    useCounterContext() as CounterContextType;
+  const { count, increment, decrement, setCount } = useCounterContext();
 
   return (
     <div
