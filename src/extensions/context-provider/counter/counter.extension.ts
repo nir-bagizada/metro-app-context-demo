@@ -52,9 +52,10 @@ export default extensions.contextProvider({
     },
     contextSpecifier: {
       hook: 'useCounterContext',
-      // Not an npm package: Thunderbolt's import map resolves it to this
-      // provider's client bundle, and consumers list it in `contextDependencies`.
-      moduleSpecifier: 'echo-counter-context',
+      // Must equal the SDK subpath metro generates for this provider: viewer
+      // consumers list it in `contextDependencies` so Thunderbolt's import map
+      // resolves it to this bundle, while headless apps get it from npm.
+      moduleSpecifier: '@wix/echo/context',
     },
   },
 });

@@ -1,10 +1,9 @@
 import type { FC, ReactNode } from 'react';
 import { Component } from 'react';
-// `contextDependencies` (see the .extension.ts) keeps the provider's
-// `moduleSpecifier` external; Thunderbolt's import map resolves it to the
-// provider's client bundle at runtime. tsconfig `paths` types it from the
-// provider source.
-import { useCounterContext } from 'echo-counter-context';
+// `contextDependencies` (see the .extension.ts) keeps `@wix/echo/context`
+// external, so Thunderbolt's import map resolves it to the provider bundle it
+// mounts instead of bundling a second copy of the context.
+import { useCounterContext } from '@wix/echo/context';
 
 type ContextCounterWidgetProps = {
   id?: string;

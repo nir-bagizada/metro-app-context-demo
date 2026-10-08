@@ -16,6 +16,7 @@
   "dependencies": {
     "@wix/app-extensions": "^1.0.178",
     "@wix/custom-extensions": "^0.2.22",
+    "@wix/echo": "^1.0.125",
     "@wix/react-component-schema": "^1.9.0"
   },
   "devDependencies": {

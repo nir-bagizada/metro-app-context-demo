@@ -34,7 +34,7 @@ export default extensions.editorReactComponent({
     client: {
       componentUrl,
       dependencies: {
-        contextDependencies: ['echo-counter-context'],
+        contextDependencies: ['@wix/echo/context'],
       },
     },
   },
