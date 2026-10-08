@@ -1,40 +1,38 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
-/**
- * EDITOR_CONTEXT_PROVIDER counter — the context-provider twin of the
- * ViewerService counter (../../viewer-service). Authored by hand from the CLI
- * scaffold at `@wix/cli/templates/astro/context-provider` because `wix generate`
- * has NO CONTEXT_PROVIDER type (wayfinder T21) — the template must be copied in.
- *
- * State is plain React `useState`, NOT the `@preact/signals-react` signal the CLI
- * scaffold template ships (wayfinder T21 finding #8). The provider and its
- * consumer widget are SEPARATELY bundled extensions, so each would carry its own
- * `signals-core` instance; a signal created here can't drive a re-render in the
- * consumer's bundle — the value reads correctly but mutations never notify it, so
- * the counter renders yet its buttons look dead. React Context propagation works
- * across bundles because React itself is a shared external: when `count` changes,
- * the context value changes identity and every consumer re-renders. This also
- * matches the manifest, which declares `count` as `dataType: 'number'`.
- *
- * The hook name below (`useCounterContext`) must match the extension's
- * `resources.contextSpecifier.hook` — that is the export Thunderbolt re-exports
- * from the provider's runtime module for consumers.
- */
+// State is React `useState`, not a signal: the provider and its consumers are
+// separately bundled, and only React (a shared external) propagates updates
+// across bundles.
+
+/** Counter state and actions exposed by the echo counter context. */
 export interface CounterContextType {
+  /** Current counter value. */
   count: number;
+  /** Decrements the counter by 1. */
   decrement: () => void;
+  /** Increments the counter by 1. */
   increment: () => void;
+  /**
+   * Sets the counter to a specific value.
+   * @param count - The new counter value.
+   */
   setCount: (count: number) => void;
 }
 
+/** Props of {@link CounterContextProvider}. */
 export interface CounterProviderProps {
   children?: React.ReactNode;
+  /** Value the counter starts from. Defaults to `0`. */
   initialCount: number;
 }
 
 const CounterContext = createContext<CounterContextType | undefined>(undefined);
 CounterContext.displayName = 'CounterContext';
 
+/**
+ * Returns the counter state and actions of the nearest counter provider.
+ * @throws If called outside a `CounterContextProvider`.
+ */
 export function useCounterContext(): CounterContextType {
   const context = useContext(CounterContext);
   if (!context) {
@@ -46,6 +44,7 @@ export function useCounterContext(): CounterContextType {
   return context;
 }
 
+/** Provides counter state to its subtree. */
 function CounterContextProvider({
   children,
   initialCount,

@@ -1,8 +1,4 @@
-import { extensions } from '@wix/astro/builders/experimental';
-// `?url` import → @wix/astro runs the context-provider client bundler over this
-// source and rewrites resources.client.url to the built runtime module URL in the
-// generated manifest (same pattern as the editorReactComponent's componentUrl).
-import providerUrl from './counter.provider.tsx?url';
+import { extensions } from '@wix/custom-extensions/experimental';
 
 /**
  * EDITOR_CONTEXT_PROVIDER counter extension (wayfinder T21).
@@ -15,7 +11,7 @@ import providerUrl from './counter.provider.tsx?url';
  * the registration is orphaned (wayfinder T6/T18).
  *
  * `type` must be `<codeIdentifier>.<ComponentName>` (codeIdentifier from
- * wix.config.json). The release enrichment SPI rejects a bare type with
+ * wix.config.mjs). The release enrichment SPI rejects a bare type with
  * "Component type does not begin with code identifier" — same rule the counter
  * widget hit.
  *
@@ -80,7 +76,7 @@ export default extensions.contextProvider({
   },
   resources: {
     client: {
-      url: providerUrl,
+      url: './extensions/context-provider/counter/counter.provider.tsx',
     },
     contextSpecifier: {
       hook: 'useCounterContext',

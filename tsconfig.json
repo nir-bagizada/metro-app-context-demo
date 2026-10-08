@@ -1,5 +1,10 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "extends": "@wix/custom-extensions/tsconfigs/base",
+  "compilerOptions": {
+    "paths": {
+      "echo-counter-context": [
+        "./src/extensions/context-provider/counter/counter.provider.tsx"
+      ]
+    }
+  }
 }

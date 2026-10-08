@@ -1,22 +1,10 @@
 import type { FC, ReactNode } from 'react';
 import { Component } from 'react';
-// The hook comes from the PUBLIC SDK surface `@wix/echo` (wayfinder
-// T22/T23, Stage-2 import parity): metro-generated re-exports of the typed
-// shim `@wix/echo-counter/context`, whose runtime is a bare re-export of the
-// provider's `contextSpecifier.moduleSpecifier` (`echo-counter-context`) —
-// NOT hook code; a bundled hook copy would be a second React-context instance
-// that never sees the provider's value. `contextDependencies` (see the
-// .extension.ts) keeps that specifier external through BOTH node_modules hops
-// (@wix/echo → @wix/echo-counter/context → echo-counter-context); Thunderbolt's
-// import map resolves it to the provider's client bundle at runtime.
-// NOTE: still the root, not `@wix/echo/context`, and this is an ordering
-// constraint rather than an oversight. The SDK_EXPORTS in this same project now
-// declare `relativeSpecifier: 'context'`, but that subpath only comes into
-// existence once THIS release regenerates the SDK and the new `@wix/echo`
-// publishes. Importing it early is a hard build failure, not just a type error:
-// `Missing "./context" specifier in "@wix/echo" package` from the bundler. Flip
-// this import (and bump `@wix/echo`) in a follow-up release.
-import { useCounterContext } from '@wix/echo';
+// `contextDependencies` (see the .extension.ts) keeps the provider's
+// `moduleSpecifier` external; Thunderbolt's import map resolves it to the
+// provider's client bundle at runtime. tsconfig `paths` types it from the
+// provider source.
+import { useCounterContext } from 'echo-counter-context';
 
 type ContextCounterWidgetProps = {
   id?: string;

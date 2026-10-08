@@ -1,4 +1,4 @@
-import { extensions } from '@wix/astro/builders';
+import { extensions } from '@wix/custom-extensions';
 import { LAYOUT } from '@wix/react-component-schema';
 import componentUrl from './context-counter-widget.tsx?url';
 

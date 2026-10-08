@@ -4,9 +4,6 @@
 # build output
 dist/
 
-# generated types
-.astro/
-
 # dependencies (no trailing slash: also catches the worktree symlink)
 node_modules
 

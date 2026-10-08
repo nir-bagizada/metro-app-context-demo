@@ -1,0 +1,12 @@
+// @ts-check
+import { defineWixConfig } from '@wix/cli/config';
+
+export default defineWixConfig({
+  config: {
+    appId: '76290c0c-6da3-4c63-9c9c-a9afebd34978',
+    projectId: 'metro-app-context-demo',
+    namespace: '@guyo91/metropit0d6',
+    codeIdentifier: 'Guyo91Metropit0d6',
+    projectType: 'App',
+  },
+});
