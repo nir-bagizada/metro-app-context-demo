@@ -9,7 +9,7 @@ export default editorInstallation({
   data: {
     targetEditors: ['HARMONY_EDITOR_TYPE'],
     contextProviders: [
-      { component: { componentId: '0d656462-e848-4081-a0c3-ce93e8a54fef' } },
+      { component: { componentId: '0fb7a438-d06e-4760-8d23-fb57e0ce029d' } },
     ],
   },
 });

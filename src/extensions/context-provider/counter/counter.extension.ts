@@ -4,9 +4,9 @@ import { extensions } from '@wix/custom-extensions/experimental';
 // enrichment SPI rejects anything else. On live sites the provider runtime only
 // loads behind the `specs.thunderbolt.contextProviders` experiment.
 export default extensions.contextProvider({
-  id: '0d656462-e848-4081-a0c3-ce93e8a54fef',
+  id: '0fb7a438-d06e-4760-8d23-fb57e0ce029d',
   name: 'counterContext',
-  type: 'Guyo91Metropit0d6.CounterContext',
+  type: 'Guyo91Metropit0d6.EchoCounterContext',
   description: 'Echo counter context provider (demo)',
   context: {
     items: {

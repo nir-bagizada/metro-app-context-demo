@@ -24,6 +24,6 @@ export default extensions.sdkExports({
   id: '733211f2-9403-4fad-a3b7-6668363ba546',
   name: 'Counter context',
   contextExports: {
-    componentId: '0d656462-e848-4081-a0c3-ce93e8a54fef',
+    componentId: '0fb7a438-d06e-4760-8d23-fb57e0ce029d',
   },
 });
