@@ -21,15 +21,8 @@ const shellStyle = {
   borderRadius: 8,
 } as const;
 
-/**
- * Error boundary so a missing context provider NEVER crashes the host.
- *
- * `useCounterContext()` throws synchronously in render when no
- * <CounterContextProvider> is above it — which is the case off a live page, and
- * on live pages when the `specs.thunderbolt.contextProviders` experiment is
- * closed (wayfinder T20/T21). We catch it and render a neutral placeholder, the
- * same defence the ViewerService counter widget uses.
- */
+// `useCounterContext()` throws when no provider is mounted (off live pages, or
+// with the context-providers experiment closed); render a placeholder instead.
 class ContextBoundary extends Component<
   { children: ReactNode; fallback: ReactNode },
   { failed: boolean }
@@ -45,14 +38,6 @@ class ContextBoundary extends Component<
   }
 }
 
-/**
- * Inner widget — consumes the EDITOR_CONTEXT_PROVIDER counter via its hook.
- *
- * `count` is a signal; reading `count.value` in render subscribes this component
- * so it re-renders on change. This is the context-provider twin of the
- * ViewerService counter widget, and proves the same counter behaviour through the
- * context-provider primitive.
- */
 const ContextCounterInner: FC<ContextCounterWidgetProps> = ({
   id,
   className,
@@ -84,16 +69,6 @@ const ContextCounterInner: FC<ContextCounterWidgetProps> = ({
   );
 };
 
-/**
- * Harness widget for the echo counter CONTEXT PROVIDER.
- *
- * Declaring `echo-counter-context` in the extension's `contextDependencies` is
- * what makes Thunderbolt wrap this component's subtree with the provider on a
- * live page (gated by `specs.thunderbolt.contextProviders`). Where the provider
- * is absent, the boundary shows a placeholder so the host still loads.
- *
- * React 17-compatible APIs only (site components don't support React 18 features).
- */
 const ContextCounterWidget: FC<ContextCounterWidgetProps> = ({
   id,
   className,
